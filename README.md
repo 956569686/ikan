@@ -40,6 +40,8 @@
 
 解耦。恩  ，就这样。
 
+不闹了，大致说明一下吧
+
 主工程分为presentation、domain、data 模块, presentation -> domain -> data
 
 presentation采用mvp模式将视图层独立出来，对外提供view接口，presenter持有并以此更新view状态
