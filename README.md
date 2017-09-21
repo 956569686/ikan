@@ -40,7 +40,7 @@
 
 解耦。恩  ，就这样。
 
-不闹了，大致说明一下吧
+不闹了，粗略解释一下
 
 主工程分为presentation、domain、data 模块, presentation -> domain -> data
 
