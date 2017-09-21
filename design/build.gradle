@@ -1,0 +1,6 @@
+apply from: '../buildSystem/buildLibrary.gradle'
+
+dependencies {
+    implementation project(':toolkit')
+    implementation project(path: ':support')
+}

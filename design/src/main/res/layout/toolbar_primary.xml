@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/toolbar_height">
+
+    <TextView
+        android:id="@+id/left_tv"
+        style="@style/Toolbar.Left.Tv"
+        android:visibility="gone" />
+
+    <ImageView
+        android:id="@+id/left_iv"
+        style="@style/Toolbar.Left.Iv"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/title_tv"
+        style="@style/Toolbar.Title.Primary" />
+
+    <TextView
+        android:id="@+id/right_tv"
+        style="@style/Toolbar.Right.Tv"
+        android:visibility="gone" />
+
+    <ImageView
+        android:id="@+id/right_iv"
+        style="@style/Toolbar.Right.Iv"
+        android:visibility="gone" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_alignParentBottom="true"
+        android:background="@color/divider_line_color_primary" />
+
+</RelativeLayout>

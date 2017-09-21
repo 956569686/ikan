@@ -1,0 +1,9 @@
+<resources>
+    <string name="action_cancel">取消</string>
+    <string name="lce_empty_des">暂无数据</string>
+    <string name="lce_error_des">加载失败</string>
+    <string name="lce_loading_des">正在加载...</string>
+    <string name="lce_error_action_des">再试一次</string>
+
+    <string name="loading">努力加载中...</string>
+</resources>

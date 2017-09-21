@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="white">#FFFFFF</color>
+
+    <color name="primary_grey">#e9e9e9</color>
+    <color name="secondary_grey">#FFE5E5E5</color>
+    <color name="tertiary_grey">#FFE5E5E5</color>
+    <color name="fourth_grey">#FF333333</color>
+
+    <color name="primary_blue">#1a1e1e</color>
+    <color name="secondary_blue">#262e31</color>
+
+    <color name="primary_orange">#ff8500</color>
+
+    <color name="primary_dark">#353535</color>
+    <color name="secondary_dark">#ababab</color>
+    <color name="tertiary_dark">#bebcbf</color>
+    <color name="fourth_dark">#1A000000</color>
+    <color name="fifth_dark">#98959a</color>
+
+    <color name="title_color_primary">#000</color>
+    <color name="title_color_secondary">#000</color>
+    <color name="title_color_tertiary">#000</color>
+
+    <color name="toolbar_title_color_primary">#000</color>
+
+    <color name="divider_line_color_primary">#EDEDED</color>
+    <color name="divider_line_color_secondary">#000</color>
+
+    <color name="common_item_bg_normal_color">@color/white</color>
+    <color name="common_item_bg_press_color">@color/secondary_grey</color>
+
+    <color name="lce_des_text_color">#d7d7d7d7</color>
+
+    <color name="transparent">@color/secondary_grey</color>
+</resources>

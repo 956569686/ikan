@@ -1,0 +1,238 @@
+apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
+
+android {
+    compileSdkVersion 26
+    buildToolsVersion androidBuildTools
+
+    dexOptions {
+        maxProcessCount 4
+        preDexLibraries false
+        javaMaxHeapSize "8g"
+    }
+
+    signingConfigs {
+        debug {
+            storeFile file("../buildSystem/dev.jks")
+            storePassword "123456"
+            keyAlias "ikan"
+            keyPassword "123456"
+        }
+
+        release {
+            storeFile file("../buildSystem/release.jks")
+            storePassword "123456"
+            keyAlias "ikan"
+            keyPassword "123456"
+        }
+    }
+
+    defaultConfig {
+        applicationId "me.chriskyle.ikan"
+
+        minSdkVersion androidMinSdk
+        targetSdkVersion androidTargetSdk
+        testInstrumentationRunner "${applicationId}.runner.RxAndroidJUnitRunner"
+
+        versionName versionName
+        versionCode versionCode
+
+        multiDexEnabled true
+    }
+
+    flavorDimensions "inner"
+
+    productFlavors {
+        dev {
+            applicationIdSuffix ".dev"
+            resValue "string", "app_name", "爱看-dev"
+            buildConfigField "String", "ENVIRONMENT", '"dev"'
+            buildConfigField("String", "API_BASE_URL", "\"${APIBaseUrl}\"")
+            manifestPlaceholders = [UMENG_CHANNEL_VALUE: "dev"]
+
+            dimension "inner"
+        }
+
+        stage {
+            applicationIdSuffix ".stage"
+            resValue "string", "app_name", "爱看-stage"
+            buildConfigField "String", "ENVIRONMENT", '"stage"'
+            buildConfigField("String", "API_BASE_URL", "\"${APIBaseUrl}\"")
+            manifestPlaceholders = [UMENG_CHANNEL_VALUE: "stage"]
+
+            dimension "inner"
+        }
+
+        prod {
+            applicationIdSuffix ".prod"
+            resValue "string", "app_name", "爱看"
+            buildConfigField "String", "ENVIRONMENT", '"prod"'
+            buildConfigField("String", "API_BASE_URL", "\"${APIBaseUrl}\"")
+            manifestPlaceholders = [UMENG_CHANNEL_VALUE: "prod"]
+
+            dimension "inner"
+        }
+    }
+
+    buildTypes {
+        debug {
+            minifyEnabled false
+            shrinkResources false
+            zipAlignEnabled true
+            useProguard false
+            signingConfig signingConfigs.debug
+
+            proguardFiles getDefaultProguardFile('proguard-android.txt'),
+                    'proguard-rules.pro'
+        }
+
+        release {
+            minifyEnabled false
+            zipAlignEnabled false
+            shrinkResources false
+            signingConfig signingConfigs.release
+
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+
+            android.applicationVariants.all { variant ->
+                variant.outputs.all {
+                    outputFileName = "${variant.productFlavors[0].name}-${defaultConfig.versionName}_${releaseTime()}.apk"
+                }
+            }
+        }
+    }
+
+    sourceSets {
+        def commonTestDir = 'src/commonTest/java'
+
+        test {
+            java.srcDir commonTestDir
+        }
+
+        androidTest {
+            java.srcDir commonTestDir
+        }
+    }
+
+    lintOptions {
+        textOutput "stdout"
+        textReport true
+        checkAllWarnings true
+        warningsAsErrors true
+        showAll true
+        explainIssues true
+        abortOnError false
+        lintConfig file("$projectDir/lint.xml")
+    }
+
+    packagingOptions {
+        exclude 'META-INF/services/javax.annotation.processing.Processor'
+        exclude 'LICENSE.txt'
+        exclude 'META-INF/license/LICENSE.base64.txt'
+        exclude 'META-INF/NOTICE.txt'
+        exclude 'META-INF/LICENSE.txt'
+        exclude 'META-INF/rxjava.properties'
+        exclude 'META-INF/MANIFEST.MF'
+        exclude 'META-INF/DEPENDENCIES'
+        exclude 'META-INF/NOTICE'
+        exclude 'META-INF/maven/com.squareup.okio/okio/pom.xml'
+        exclude 'META-INF/maven/com.squareup.okio/okio/pom.properties'
+        exclude 'META-INF/services/javax.annotation.processing.Processor'
+        exclude 'licenses/javolution.license.TXT'
+        exclude 'org/apache/maven/project/pom-4.0.0.xml'
+        exclude 'org/cyberneko/html/res/HTMLlat1.properties'
+        exclude 'licenses/extreme.indiana.edu.license.TXT'
+        exclude 'org/cyberneko/html/res/ErrorMessages_ja.properties'
+        exclude 'licenses/thoughtworks.TXT'
+        exclude 'asm-license.txt'
+        exclude 'org/cyberneko/html/res/ErrorMessages_ja.txt'
+        exclude 'META-INF/plexus/components.xml'
+        exclude 'org/cyberneko/html/res/ErrorMessages.properties'
+        exclude 'org/codehaus/plexus/plexus-bootstrap.xml'
+        exclude 'org/cyberneko/html/res/HTMLspecial.properties'
+        exclude 'org/cyberneko/html/res/HTMLsymbol.properties'
+        exclude 'org/cyberneko/html/res/XMLbuiltin.properties'
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    testOptions {
+        unitTests {
+            returnDefaultValues = true
+        }
+    }
+}
+
+def static releaseTime() {
+    return new Date().format("yyyy-MM-dd", TimeZone.getTimeZone("UTC"))
+}
+
+def static outputApkPath() {
+    return "${System.properties['user.home']}${File.separator}android_apks"
+}
+
+configurations.all {
+    resolutionStrategy {
+        force 'com.squareup.okio:okio:1.11.0'
+        force "com.squareup.okhttp3:okhttp:3.5.0"
+        force 'org.jetbrains.kotlin:kotlin-stdlib:1.1.4-3'
+    }
+}
+
+apply from: '../buildSystem/dependencies.gradle'
+
+dependencies {
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
+    implementation supportLibs
+    implementation networkLibs
+    implementation rxJavaLibs
+    implementation otherLibs
+    debugImplementation debugLibs
+    releaseImplementation releaseLibs
+    implementation(glideOkhttp) {
+        exclude group: 'glide-parent'
+    }
+    debugImplementation(sherlock) {
+        transitive = true
+    }
+    // APT dependencies
+    kapt annotationProcessorLibs
+    kaptTest daggerCompiler
+    kaptAndroidTest daggerCompiler
+    testImplementation unitTestLibs
+    androidTestImplementation androidTestsLibs
+    testImplementation unitTestLibs
+    androidTestImplementation androidTestsLibs
+    implementation project(':mvp')
+    implementation project(':net')
+    implementation project(':eventbus')
+    implementation project(':support')
+    implementation project(':toolkit')
+}
+
+tasks.matching { it instanceof Test }.all {
+    testLogging.events = ["failed", "passed", "skipped"]
+}
+
+task ikanRelease() << {
+    println("打包完成，开始清除${outputApkPath()}")
+    delete "${outputApkPath()}"
+    println("清除完成，开始复制文件")
+
+    android.applicationVariants.all { variant ->
+        variant.outputs.each { output ->
+            copy {
+                from(output.outputFile)
+                into("${outputApkPath()}")
+                exclude '*-unaligned.apk'
+            }
+        }
+    }
+}
+
+ikanRelease.dependsOn('assemble')
