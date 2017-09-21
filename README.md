@@ -40,6 +40,14 @@
 
 解耦。恩  ，就这样。
 
+主工程分为presentation、domain、data 模块, presentation -> domain -> data
+
+presentation采用mvp模式将视图层独立出来，对外提供view接口，presenter持有并以此更新view状态
+domain -> data 你可能觉得层次嵌套有些深，但是我可以告诉你不多，已经在解耦和复杂度做了平衡选择，这里repository模式，名词过于生硬，说白了就是domain定义一个获取数据的接口，data层负责去实现就行，至于如何获取的数据是对domain、presentation层透明的。data层就是数据存储相关的了，因为数据不只是从远程服务端获取还有本地存储的，为了做到尽量灵活，我们为repository添加datastore接口，实现分别为cloud和local，这样repository就可以随时切换数据来源。cloud模块没有逃离世俗，采用okhttp+retrofit+rxjava，还为cloud添加token机制（token获取自动刷新token并恢复原有请求调用，就是使用流的妙处），请求拦截等，这些功能算是非业务功能，应该多数app都应该有的，而且解决方案不一定合适，所以这里就给出了一种实现。
+
+tip： 如果有什么疑问或者有什么好的提议，可以添加qq群141741586进行探讨
+
+
 
 
 
